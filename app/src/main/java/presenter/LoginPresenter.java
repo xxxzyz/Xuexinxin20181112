@@ -29,12 +29,16 @@ public class LoginPresenter {
   /*
   判断是否记住密码
    */
-    public void isJz(String user,String pass,boolean jz) {
+    public void isJz(SharedPreferences sharedPreferences) {
+        LoginModel loginModel=new LoginModel();
+        //获得modeld的数据
+        ArrayList<Object> list=loginModel.getSp(sharedPreferences);
+      //判断是否记住密码
+        if (list.get(2).toString().equals("true")){
 
-        if (jz){
-            mMyLoginListener.setText(user,pass);
+            mMyLoginListener.setText(list.get(0).toString(),list.get(1).toString());
         } else {
-            mMyLoginListener.cancelText(user,pass);
+            mMyLoginListener.cancelText(list.get(0).toString(),list.get(1).toString());
         }
     }
 

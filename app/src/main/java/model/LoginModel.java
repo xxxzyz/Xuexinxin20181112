@@ -24,4 +24,16 @@ public class LoginModel {
         editor.putBoolean("jz",false);
         editor.commit();
     }
+
+    public ArrayList<Object> getSp(SharedPreferences sharedPreferences) {
+        ArrayList<Object> list=new ArrayList<>();
+        String user=sharedPreferences.getString("user","");
+        String pass=sharedPreferences.getString("pass","");
+        boolean jz=sharedPreferences.getBoolean("jz",false);
+        list.add(user);
+        list.add(pass);
+        list.add(jz);
+        return list;
+
+    }
 }

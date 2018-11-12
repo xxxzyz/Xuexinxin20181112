@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //初始化控件
         initView();
         mLoginPresenter=new LoginPresenter(this);
+
         mSharedPreferences=getSharedPreferences("xxx",MODE_PRIVATE);
-        String user=mSharedPreferences.getString("user","");
-        String pass=mSharedPreferences.getString("pass","");
-        boolean jz=mSharedPreferences.getBoolean("jz",false);
+
+
         //判断是否记住密码
-        mLoginPresenter.isJz(user,pass,jz);
+        mLoginPresenter.isJz(mSharedPreferences);
 
 
     }
