@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -33,22 +34,30 @@ import module.Grid;
 public class SuccessActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView qrcode;
-    private EditText sousuo;
     private GridView grid, grid2;
 
     private GridAdapter mGridAdapter;
     private GoodsAdapter mGoodsAdapter;
     private TextView tv;
     ArrayList<String> list;
+    private int index=-1;
   Handler handler=new Handler(){
       @Override
       public void handleMessage(Message msg) {
           super.handleMessage(msg);
           switch (msg.what){
               case 0:
-                  tv.setText("哈哈哈哈哈");
-                  TranslateAnimation translateAnimation=new TranslateAnimation(Animation.RELATIVE_TO_SELF,
-                          -0.5f,Animation.RELATIVE_TO_SELF,123f);
+                  if(index<=0){
+                      index++;
+                      tv.setText(list.get(index));
+                      if(index==1){
+                          index=-1;
+                      }
+                  }
+
+
+                  TranslateAnimation translateAnimation=new TranslateAnimation(0.0f,
+                          0.0f,0.0f,80f);
                   translateAnimation.setDuration(1000);
                   tv.startAnimation(translateAnimation);
                   handler.sendEmptyMessageDelayed(0,1000);
@@ -74,7 +83,9 @@ public class SuccessActivity extends AppCompatActivity implements View.OnClickLi
         loadGrid();
         //获得列表数据
         loadGoods();
-
+   list=new ArrayList<>();
+   list.add("张渊卓");
+   list.add("薛鑫欣");
 
         handler.sendEmptyMessageDelayed(0,2000);
     }
@@ -97,6 +108,7 @@ public class SuccessActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onPostExecute(ArrayList<Goods.DataBean> dataBeans) {
                 super.onPostExecute(dataBeans);
+
                 //展示数据，更新适配器
                 mGoodsAdapter.setData(dataBeans);
 
@@ -112,22 +124,26 @@ public class SuccessActivity extends AppCompatActivity implements View.OnClickLi
     //获得九宫格数据
      */
     private void loadGrid() {
-        new AsyncTask<String, Void, ArrayList<Grid.DataBean>>() {
+        new AsyncTask<String, Void, Grid>() {
 
             @Override
-            protected ArrayList<Grid.DataBean> doInBackground(String... strings) {
+            protected Grid doInBackground(String... strings) {
                 //获得网络请求的数据
                 GridModel gridModel = new GridModel();
                 String textString = gridModel.getHttpGrid(strings[0]);
                 Grid grid = new Gson().fromJson(textString, Grid.class);
-                return (ArrayList<Grid.DataBean>) grid.getData();
+
+                return grid;
             }
 
             @Override
-            protected void onPostExecute(ArrayList<Grid.DataBean> dataBeans) {
+            protected void onPostExecute(Grid dataBeans) {
                 super.onPostExecute(dataBeans);
+                if(dataBeans==null){
+                    return;
+                }
                 //展示数据，更新适配器
-                mGridAdapter.setData(dataBeans);
+                mGridAdapter.setData((ArrayList<Grid.DataBean>) dataBeans.getData());
 
             }
         }.execute(
@@ -140,8 +156,7 @@ public class SuccessActivity extends AppCompatActivity implements View.OnClickLi
      */
     private void initView() {
         qrcode = (ImageView) findViewById(R.id.qrcode);
-        sousuo = (EditText) findViewById(R.id.sousuo);
-        grid = (GridView) findViewById(R.id.grid);
+       grid=findViewById(R.id.grid);
         grid2=findViewById(R.id.grid2);
        tv=findViewById(R.id.tv);
         //设置点击

@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 /**
  * date:2018/11/12
@@ -17,6 +18,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ZXingLibrary.initDisplayOpinion(this);
         ImageLoader.getInstance().init(
                 new ImageLoaderConfiguration.Builder(this)
                         .memoryCacheSizePercentage(10)
